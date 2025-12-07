@@ -1,25 +1,23 @@
 public class Movie extends Media {
     private String director;
-    private int runtimeMinutes;
+    private int runtime; // in minutes
 
-    public Movie(int itemID, String title, String genre, int quantity,
-                 String director, int runtimeMinutes) {
-        super(itemID, title, genre, quantity);
+    public Movie(int id, String title, String genre, int qty, String director, int runtime) {
+        super(id, title, genre, qty);
         this.director = director;
-        this.runtimeMinutes = runtimeMinutes;
+        this.runtime = runtime;
     }
 
-    @Override
-    public String getType() { return "Movie"; }
-
-    @Override
-    public String getDetails() {
-        return "Director: " + director + ", Runtime: " + runtimeMinutes + " min";
-    }
+    public String getDirector() { return director; }
+    public int getRuntime() { return runtime; }
 
     @Override
     public String toCSV() {
-        return "Movie," + title + "," + genre + "," + quantity + "," +
-                director + "," + runtimeMinutes + "," + itemID;
+        return "Movie," + getTitle() + "," + getGenre() + "," + getQty() + "," + director + "," + runtime + "," + getItemID();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Director: " + director + " | Runtime: " + runtime + " mins";
     }
 }
