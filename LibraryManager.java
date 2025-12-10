@@ -11,6 +11,18 @@ public class LibraryManager {
         inventory = new ArrayList<>();
         sc = new Scanner(System.in);
         nextID = 1;
+        // Try to load existing CSV inventory; if none, populate sample data
+        File f = new File("library_inventory.csv");
+        if (f.exists() && f.length() > 0) {
+            try {
+                loadFromCSV("library_inventory.csv");
+            } catch (Exception e) {
+                // If loading fails, fall back to a sample inventory
+                populateSampleInventory();
+            }
+        } else {
+            populateSampleInventory();
+        }
     }
 
     public static void main(String[] args) {
@@ -203,6 +215,7 @@ public class LibraryManager {
     public void loadFromCSV(String filename) throws Exception {
         Scanner file = new Scanner(new File(filename));
         inventory.clear();
+        int maxID = 0;
 
         while (file.hasNextLine()) {
             String[] t = file.nextLine().split(",");
@@ -210,13 +223,54 @@ public class LibraryManager {
                 inventory.add(new Book(
                         Integer.parseInt(t[6]), t[1], t[2],
                         Integer.parseInt(t[3]), t[4], Integer.parseInt(t[5])));
+                maxID = Math.max(maxID, Integer.parseInt(t[6]));
             } else {
                 inventory.add(new Movie(
                         Integer.parseInt(t[6]), t[1], t[2],
                         Integer.parseInt(t[3]), t[4], Integer.parseInt(t[5])));
+                maxID = Math.max(maxID, Integer.parseInt(t[6]));
             }
         }
         file.close();
+        // ensure nextID is greater than any existing ID
+        nextID = Math.max(nextID, maxID + 1);
+    }
+
+    // Populate the inventory with a default sample set (used when no CSV present)
+    private void populateSampleInventory() {
+        // ---------------- Sample books (15) ----------------
+        inventory.add(new Book(nextID++, "Harry Potter and the Sorcerer's Stone", "Fantasy", 5, "J.K. Rowling", 309));
+        inventory.add(new Book(nextID++, "The Hobbit", "Fantasy", 3, "J.R.R. Tolkien", 310));
+        inventory.add(new Book(nextID++, "1984", "Dystopian", 4, "George Orwell", 328));
+        inventory.add(new Book(nextID++, "Pride and Prejudice", "Romance", 2, "Jane Austen", 279));
+        inventory.add(new Book(nextID++, "To Kill a Mockingbird", "Fiction", 3, "Harper Lee", 324));
+        inventory.add(new Book(nextID++, "The Great Gatsby", "Fiction", 2, "F. Scott Fitzgerald", 180));
+        inventory.add(new Book(nextID++, "Moby Dick", "Adventure", 2, "Herman Melville", 635));
+        inventory.add(new Book(nextID++, "War and Peace", "Historical", 3, "Leo Tolstoy", 1225));
+        inventory.add(new Book(nextID++, "The Catcher in the Rye", "Fiction", 4, "J.D. Salinger", 214));
+        inventory.add(new Book(nextID++, "Brave New World", "Dystopian", 3, "Aldous Huxley", 268));
+        inventory.add(new Book(nextID++, "The Lord of the Rings", "Fantasy", 5, "J.R.R. Tolkien", 1178));
+        inventory.add(new Book(nextID++, "The Chronicles of Narnia", "Fantasy", 4, "C.S. Lewis", 767));
+        inventory.add(new Book(nextID++, "Jane Eyre", "Romance", 3, "Charlotte Bronte", 500));
+        inventory.add(new Book(nextID++, "Wuthering Heights", "Romance", 2, "Emily Bronte", 416));
+        inventory.add(new Book(nextID++, "Crime and Punishment", "Crime", 3, "Fyodor Dostoevsky", 671));
+
+        // ---------------- Sample movies (15) ----------------
+        inventory.add(new Movie(nextID++, "Inception", "Sci-Fi", 4, "Christopher Nolan", 148));
+        inventory.add(new Movie(nextID++, "The Matrix", "Sci-Fi", 3, "The Wachowskis", 136));
+        inventory.add(new Movie(nextID++, "Titanic", "Romance", 2, "James Cameron", 195));
+        inventory.add(new Movie(nextID++, "The Godfather", "Crime", 3, "Francis Ford Coppola", 175));
+        inventory.add(new Movie(nextID++, "The Dark Knight", "Action", 4, "Christopher Nolan", 152));
+        inventory.add(new Movie(nextID++, "Pulp Fiction", "Crime", 3, "Quentin Tarantino", 154));
+        inventory.add(new Movie(nextID++, "Forrest Gump", "Drama", 2, "Robert Zemeckis", 142));
+        inventory.add(new Movie(nextID++, "The Shawshank Redemption", "Drama", 3, "Frank Darabont", 142));
+        inventory.add(new Movie(nextID++, "The Lion King", "Animation", 4, "Roger Allers", 88));
+        inventory.add(new Movie(nextID++, "Gladiator", "Action", 3, "Ridley Scott", 155));
+        inventory.add(new Movie(nextID++, "Avatar", "Sci-Fi", 4, "James Cameron", 162));
+        inventory.add(new Movie(nextID++, "Interstellar", "Sci-Fi", 3, "Christopher Nolan", 169));
+        inventory.add(new Movie(nextID++, "Finding Nemo", "Animation", 5, "Andrew Stanton", 100));
+        inventory.add(new Movie(nextID++, "Jurassic Park", "Adventure", 3, "Steven Spielberg", 127));
+        inventory.add(new Movie(nextID++, "The Avengers", "Action", 4, "Joss Whedon", 143));
     }
 
     /* ---------------- Helper ---------------- */
